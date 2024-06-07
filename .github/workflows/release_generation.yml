@@ -24,6 +24,6 @@ jobs:
   
     - uses: ncipollo/release-action@v1
       with:
-        name: GPT Computer Agent ${{ steps.tag_extractor.outputs.latest_tag }}
+        name: NeuroMind ${{ steps.tag_extractor.outputs.latest_tag }}
         generateReleaseNotes: true
         tag: ${{ steps.tag_extractor.outputs.latest_tag }}
