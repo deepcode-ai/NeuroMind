@@ -15,14 +15,19 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment: Release
     steps:
-    - uses: actions/checkout@v4
+    - name: Harden Runner
+      uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
+      with:
+        egress-policy: audit
+
+    - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
       with:
         fetch-depth: 0
     - name: Getting Tag
       id: tag_extractor
       run: echo "latest_tag=$(git describe --tags --abbrev=0)" >> "$GITHUB_OUTPUT"
   
-    - uses: ncipollo/release-action@v1
+    - uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
       with:
         name: NeuroMind ${{ steps.tag_extractor.outputs.latest_tag }}
         generateReleaseNotes: true
