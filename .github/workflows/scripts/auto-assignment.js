@@ -26,35 +26,50 @@
 module.exports = async ({ github, context }) => {
   let issueNumber;
   let assigneesList;
+  
+  // Validate input
+  if (!context || !github) {
+    throw new Error("Invalid context or GitHub object");
+  }
+
   // Is this an issue? If so, assign the issue number. Otherwise, assign the PR number.
   if (context.payload.issue) {
-    //assignee List for issues. 
+    // Assignee list for issues. 
     assigneesList = ["SuryanarayanaY", "sachinprasadhs"];
     issueNumber = context.payload.issue.number;
   } else {
-    //assignee List for PRs. 
+    // Assignee list for PRs. 
     assigneesList = [];
     issueNumber = context.payload.number;
   }
-  console.log("assignee list", assigneesList);
-  console.log("entered auto assignment for this issue:  ", issueNumber);
+
+  console.log("Assignee list", assigneesList);
+  console.log("Entered auto assignment for this issue:  ", issueNumber);
+  
   if (!assigneesList.length) {
     console.log("No assignees found for this repo.");
     return;
   }
+
   let noOfAssignees = assigneesList.length;
   let selection = issueNumber % noOfAssignees;
   let assigneeForIssue = assigneesList[selection];
 
   console.log(
-    "issue Number = ",
+    "Issue Number = ",
     issueNumber + " , assigning to: ",
     assigneeForIssue
   );
-  return github.rest.issues.addAssignees({
-    issue_number: context.issue.number,
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    assignees: [assigneeForIssue],
-  });
+  
+  // Adding try-catch for error handling
+  try {
+    await github.rest.issues.addAssignees({
+      issue_number: context.issue.number,
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      assignees: [assigneeForIssue],
+    });
+  } catch (error) {
+    console.error("Error assigning issue:", error);
+  }
 };
