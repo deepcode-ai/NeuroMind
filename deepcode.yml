@@ -1,0 +1,81 @@
+# deepcode.yml configuration file
+version: 1.0 # Version of the configuration
+
+# General settings for code analysis
+settings:
+  analysis_level: full  # Full, fast, or custom analysis levels
+  language_support:
+    - python
+    - javascript
+    - go
+    - rust
+    - java
+    - typescript
+  enable_auto_analysis: true  # Automatically analyze code on commit or PR
+
+# Security checks and rules
+security_rules:
+  enable_vulnerabilities_scan: true  # Enable vulnerability scanning
+  check_patterns:
+    - SQL Injection
+    - Cross-Site Scripting (XSS)
+    - Insecure Dependencies
+    - Sensitive Data Leaks
+  ignore_patterns:
+    - no-secrets  # For example, ignore checking for secrets
+  enforce_strict_rules: false  # Whether to enforce strict security checks
+
+# Performance checks
+performance_rules:
+  enable_performance_check: true  # Enable performance analysis
+  check_patterns:
+    - CPU Usage
+    - Memory Leaks
+    - Unnecessary Loops
+    - Blocking Operations
+  thresholds:
+    cpu: 80 # Max allowed CPU usage
+    memory: 90 # Max allowed memory usage
+
+# Code quality checks
+quality_rules:
+  enable_code_smell_detection: true  # Enable code smell detection
+  check_patterns:
+    - long-methods
+    - deep-nesting
+    - dead-code
+    - too-many-arguments
+  enforce_best_practices: true  # Enforce best practices like naming conventions, docstrings
+
+# Integration with LLM models for code suggestions and improvements
+llm_integration:
+  enabled: true  # Enable or disable LLM analysis
+  model_name: gpt-4  # Name of the LLM model
+  prompt_template: |
+    "Analyze the following code and suggest improvements for security, performance, and code quality:\n
+    {code}"
+
+# Notification and Reporting Settings
+notifications:
+  enable_email: true
+  email_recipient: "your-email@example.com"
+  enable_slack: true
+  slack_webhook_url: "https://hooks.slack.com/services/your/slack/webhook"
+  enable_gitlab: true  # Send notifications to GitLab
+  gitlab_project_id: "your-gitlab-project-id"
+
+# GitHub integration settings for PR triggers
+github_integration:
+  enable_pr_check: true
+  pr_check_pattern:
+    - title: "Enhance performance"
+    - title: "Improve security"
+    - title: "Code quality improvements"
+  status_check_url: "https://api.github.com/repos/{owner}/{repo}/statuses/{sha}"
+
+# Custom rules (can be added by user)
+custom_rules:
+  - name: "Enhance documentation"
+    description: "Ensure all functions have docstrings."
+    pattern: "def.*\(.*\)\s*:"
+    action: "suggest_add_docstring"
